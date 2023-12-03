@@ -7,6 +7,9 @@
 #include <limits>
 #include <stdexcept>
 
+
+
+
 bool isOperator(const char c) {
     return std::string("+-*/%^").find(c) != std::string::npos;
 }
@@ -185,43 +188,29 @@ double evaluateRPN(const std::vector<std::string>& rpn) {
 }
 
 
+void displayUI() {
+    std::cout << "---------------------------------\n";
+    std::cout << "Arithmetic Expression Calculator\n";
+    std::cout << "Enter an equation (or 'q' to quit):\n";
+    std::cout << "Supported operators: + - * / % ^\n";
+    std::cout << "---------------------------------\n";
+}
 
 int main() {
-    std::vector<std::string> testExpressions = {
-            "3 + 4",
-            "8 - (5 - 2)",
-            "10 * 2 / 5",
-            "2 ^ 3",
-            "4 * (3 + 2) % 7 - 1",
-            "(((2 + 3))) + (((1 + 2)))",
-            "((5 * 2) - ((3 / 1) + ((4 % 3))))",
-            "(((2 ^ (1 + 1)) + ((3 - 1) ^ 2)) / ((4 / 2) % 3))",
-            "(((((5 - 3))) * (((2 + 1))) + ((2 * 3))))",
-            "((9 + 6)) / ((3 * 1) / (((2 + 2))) - 1)",
-            "+(-2) * (-3) - ((-4) / (+5))",
-            "-(+1) + (+2)",
-            "-(-(-3)) + (-4) + (+5)",
-            "+2 ^ (-3)",
-            "-(+2) * (+3) - (-4) / (-5)",
-            "2 * (4 + 3 - 1",       // Unmatched Parentheses
-            "* 5 + 2",              // Operators Without Operands
-            "4 / 0",                // Incorrect Operator Usage (Division by zero)
-            "5 (2 + 3)",            // Missing Operator
-            "7 & 3",                // Invalid Characters
-            "(((3 + 4) - 2) + (1",  // Mismatched Parentheses
-            "((5 + 2) / (3 * 0))",  // Invalid Operator Usage (Division by zero)
-            "((2 -) 1 + 3)",        // Invalid Operator Sequence
-            "((4 * 2) + ( - ))",    // Missing Operand
-            "((7 * 3) @ 2)",        // Invalid Characters
+    std::string input;
 
+    while (true) {
+        displayUI();
+        std::cout << ">> ";
+        std::getline(std::cin, input);
 
+        if (input == "q") {
+            std::cout << "Exiting...\n";
+            break;
+        }
 
-    };
-
-    for (const std::string& expression : testExpressions) {
-        std::cout << "Evaluating: " << expression << std::endl;
         try {
-            auto tokens = tokenize(expression);
+            auto tokens = tokenize(input);
             if (tokens.empty()) {
                 std::cout << "Tokenization failed: No valid tokens found in expression.\n\n";
                 continue;
@@ -235,8 +224,8 @@ int main() {
 
             double result = evaluateRPN(rpn);
             std::cout << "Result: " << result << "\n\n";
-        } catch (const std::runtime_error& e) {
-            std::cout << "" << e.what() << "\n\n";
+        } catch (const std::runtime_error &e) {
+            std::cout << "Error: " << e.what() << "\n\n";
             continue;
         }
     }
